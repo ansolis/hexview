@@ -1,5 +1,38 @@
 const binaryData = convertIntelHexToBinaryData('firmware.hex');
 
+const dropZone = document.getElementById('drop-zone');
+
+dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+});
+
+dropZone.addEventListener('dragleave', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+});
+
+dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+
+    const file = e.dataTransfer.files[0];
+    const reader = new FileReader();
+
+    const fileNameElement = document.createElement('p');
+    fileNameElement.textContent = `File Name: ${file.name}`;
+    dropZone.appendChild(fileNameElement);
+
+    reader.onload = function (e) {
+        const content = e.target.result;
+        // Process the file content here
+        console.log(content);
+    };
+
+    reader.readAsText(file);
+});
+
+
 function convertIntelHexToBinaryData(hexFilePath) {
   const fs = require('fs');
   const data = fs.readFileSync(hexFilePath, 'utf8');
